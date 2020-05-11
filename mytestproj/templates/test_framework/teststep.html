@@ -1,0 +1,298 @@
+{% extends "test_framework/base.html" %}
+{% load extras %}
+{% load static %}
+
+
+
+ {% block breadcrumbs %}
+          <ul class="breadcrumb">
+                <li class="active"><a href="{% url 'api-root' %}">主页</a></li>
+
+                <li><a href="{% url 'teststep-list' %}">测试步骤</a></li>
+          </ul>
+      {% endblock breadcrumbs %}
+
+       {% block content %}
+
+
+<div class="content-main" role="main" aria-label="main content">
+
+
+   <div class="container-fluid">
+
+       <div class="row" style="margin-top: 20px;margin-bottom: 20px;">
+    <form action="{% url 'teststep-list' %}" method="GET" enctype="multipart/form-data" novalidate>
+		    <div class="col-sm-3">
+
+	          <div class="form-group">
+		          {{ createform.name.label_tag|add_class:"col-sm-6 text-primary" }}
+		          <div class="col-sm-6">
+		          {{ createform.name|add_class:"form-control" }}
+	     </div>
+	          </div>
+            </div>
+		    <div class="col-sm-3">
+                	          <div class="form-group">
+		          {{ createform.requestType.label_tag|add_class:"col-sm-6 text-primary" }}
+		          <div class="col-sm-6">
+		          {{ createform.requestType|add_class:"form-control" }}
+	     </div>
+	          </div>
+
+		    </div>
+		    <div class="col-sm-3">
+		    </div>
+<div class="col-sm-3">
+
+			    <button type="submit" class="btn btn-default pull-left">查询</button>
+
+     <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create">新增</button>
+			  </div>
+   </form>
+	      </div>
+
+
+<table class="table table-hover">
+
+<thead>
+
+ <tr class="btn-primary" >
+ {% for key,value in apititle.items %}
+      {% if key not in 'headers,data,AllowRedirects,extracts,validates,config' %}
+     <th>{{ value }}<a href="{% url 'teststep-list' %}?ordering={{ key }}">↓</a></th>
+     {% endif %}
+ {% endfor%}
+     <th>操作</th>
+				    </tr>
+
+<tbody>
+{% for api in apilist %}
+
+<tr>
+    {% for key,value in api.items %}
+
+    {% if key not in 'headers,data,AllowRedirects,extracts,validates,config,apiform' %}
+<td>{{ value }}</td>
+    {% endif %}
+ {% endfor%}
+    <td class="btn-group-xs">
+        <button class="btn btn-danger" data-toggle="modal" data-target="#delete{{ api.id }}">删除</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#edit{{ api.id }}">编辑</button>
+<!--        <button class="btn btn-primary"><a href="/admin/firstproj/teststep/{{ api.id }}/change/" target="_blank" style="color:#ffffff">编辑</a></button>-->
+<button class="btn btn-primary" data-toggle="modal" data-target="#view{{ api.id }}">查看</button>
+
+    </td>
+
+        						<div class="modal fade in" id="delete{{ api.id }}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="button-form" action="{% url 'teststep-detail' api.id %}" data-method="DELETE">
+                  <div class="modal-body">
+                      {% csrf_token %}
+                    <h4 class="text-center">确定删除吗？</h4>
+                  </div>
+                  <div class="modal-footer">
+                           <ul class="list-inline" style="text-align:center">
+<li><button type="submit" class="btn btn-primary center-block">提交</button></li>
+                    <li><button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></li>
+                            </ul>
+
+                  </div>
+                          </form>
+                </div>
+              </div>
+            </div>
+
+						<div class="modal fade in" id="edit{{ api.id }}">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="text-center">编辑菜单</h4>
+				</div>
+                 <form action="{% url 'teststep-detail' api.id %}" method="PUT" enctype="multipart/form-data">
+                              <fieldset>
+					<div class="modal-body">
+{% csrf_token %}
+ {% for field in api.apiform %}
+{% if field.name in "config,headers,extracts,validates" %}
+                          <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field|add_class:"form-control" }}<a class="related-widget-wrapper-link add-related" id="add_id_{{ field.name }}" href="/admin/firstproj/{{ field.name }}/add/" target="_blank"><img src="{% static "test_framework/img/icon-addlink.svg" %}" alt="Add">新增{{ field.name }}</a>
+        <a class="related-widget-wrapper-link change-related" id="change_id_{{ field.name }}" href="/admin/firstproj/{{ field.name }}/" target="_blank"><img src="{% static "test_framework/img/icon-changelink.svg" %}" alt="Change">管理{{ field.name }}</a>
+    </div>
+  </div>
+
+         {% else %}
+  <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field|add_class:"form-control" }}
+    </div>
+  </div>
+                         {% endif %}
+{% endfor %}
+
+			</div>
+					<div class="modal-footer">
+
+  <ul class="list-inline" style="text-align:center">
+<li><button type="submit" class="btn btn-primary js-tooltip center-block">提交</button></li>
+                    <li><button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></li>
+                            </ul>
+                    </div>
+<fieldset>
+					      </form>
+
+			  </div>
+			</div>
+        </div>
+
+						<div class="modal fade in" id="view{{ api.id }}">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="text-center">步骤详情</h4>
+				</div>
+                 <form novalidate>
+                              <fieldset>
+					<div class="modal-body">
+
+{% csrf_token %}
+                         {% for field in api.apiform %}
+                          {% if field.name == "headers" %}
+                                                  <div class="row form-group table-bordered well">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+        <ul class="list-group">
+         {% for header in api.apiform.initial.headers %}
+             <div class="table-bordered"></div>
+        <li class="list-group-item">{{ header }}</li>
+{% endfor %}
+            </ul>
+<!--      {{ suite.suiteform.initial.suitecase|unordered_list }}-->
+    </div>
+  </div>
+                         {% elif field.name == "extracts" %}
+                                                            <div class="row form-group table-bordered well">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+        <ul class="list-group">
+         {% for obj in api.apiform.initial.extracts %}
+             <div class="table-bordered"></div>
+        <li class="list-group-item">{{ obj }}</li>
+{% endfor %}
+            </ul>
+<!--      {{ suite.suiteform.initial.suitecase|unordered_list }}-->
+    </div>
+  </div>
+                        {% elif field.name == "validates" %}
+                         <div class="row form-group table-bordered well">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+        <ul class="list-group">
+         {% for obj in api.apiform.initial.validates %}
+             <div class="table-bordered"></div>
+        <li class="list-group-item">{{ obj }}</li>
+{% endfor %}
+            </ul>
+<!--      {{ suite.suiteform.initial.suitecase|unordered_list }}-->
+    </div>
+  </div>
+
+                        {% else %}
+            <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field.value }}
+    </div>
+  </div>
+   {% endif %}
+{% endfor %}
+
+
+			</div>
+					<div class="modal-footer">
+
+						<div>
+					  <button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></div>
+                    </div>
+<fieldset>
+					      </form>
+
+			  </div>
+			</div>
+        </div>
+
+
+
+
+
+
+</tr>
+ {% endfor%}
+
+</tbody>
+
+</thead>
+
+</table>
+<div style="text-align: center">
+{% include "test_framework/pagination/numbers.html" %}
+</div>
+   </div>
+
+
+</div>
+
+<div class="modal fade in" id="create">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="text-center">新增菜单</h4>
+				</div>
+                <form action="{% url 'teststep-list' %}" method="POST" enctype="multipart/form-data">
+                    <fieldset>
+					<div class="modal-body">
+{% csrf_token %}
+{% for field in createform %}
+         {% if field.name in "config,headers,extracts,validates" %}
+  <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field|add_class:"form-control" }}<a class="related-widget-wrapper-link add-related" id="add_id_{{ field.name }}" href="/admin/firstproj/{{ field.name }}/add/" target="_blank"><img src="{% static "test_framework/img/icon-addlink.svg" %}" alt="Add">新增{{ field.name }}</a>
+        <a class="related-widget-wrapper-link change-related" id="change_id_{{ field.name }}" href="/admin/firstproj/{{ field.name }}/" target="_blank"><img src="{% static "test_framework/img/icon-changelink.svg" %}" alt="Change">管理{{ field.name }}</a>
+    </div>
+  </div>
+                       {% else %}
+  <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field|add_class:"form-control" }}
+    </div>
+  </div>
+                        {% endif %}
+{% endfor %}
+
+			</div>
+					<div class="modal-footer">
+                           <ul class="list-inline" style="text-align:center">
+<li><button type="submit" class="btn btn-primary js-tooltip center-block">提交</button></li>
+                    <li><button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></li>
+                            </ul>
+                    </div>
+
+</fieldset>
+                </form>
+
+			  </div>
+			</div>
+        </div>
+
+
+
+
+     {% endblock content %}

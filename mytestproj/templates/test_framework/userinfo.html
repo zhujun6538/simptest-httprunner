@@ -1,0 +1,143 @@
+{% extends "test_framework/base.html" %}
+{% load extras %}
+
+
+ {% block breadcrumbs %}
+          <ul class="breadcrumb">
+                <li class="active"><a href="{% url 'api-root' %}">主页</a></li>
+
+                <li><a href="{% url 'user-list' %}">用户管理</a></li>
+          </ul>
+      {% endblock breadcrumbs %}
+
+       {% block content %}
+
+
+<div class="content-main" role="main" aria-label="main content">
+
+
+   <div class="container-fluid">
+
+       <div class="row" style="margin-top: 20px;margin-bottom: 20px;">
+           <form action="{% url 'user-list' %}" method="GET" enctype="multipart/form-data" novalidate>
+		    <div class="col-sm-3">
+
+           </div>
+		    <div class="col-sm-3">
+
+		    </div>
+		    <div class="col-sm-3">
+		    </div>
+<div class="col-sm-3">
+ <button type="button" class="btn btn-primary pull-right"><a href="/admin/auth/user" target="_blank" style="color:#ffffff">用户管理</a></button>
+			  </div>
+               </form>
+	      </div>
+
+
+<table class="table table-hover">
+
+<thead>
+
+ <tr class="btn-primary" >
+						<th>{{ usertitle.username }}</th>
+						<th>{{ usertitle.email }}</th>
+						<th>操作</th>
+				    </tr>
+
+<tbody>
+{% for user in userlist %}
+
+<tr>
+						<td >{{ user.username }}</td>
+						<td >{{ user.email }}</td>
+    <td class="btn-group-xs">
+<button class="btn btn-primary" data-toggle="modal" data-target="#view{{ user.id }}">查看</button>
+
+    </td>
+
+
+
+						<div class="modal fade in" id="view{{ user.id }}">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="text-center">用户详情</h4>
+				</div>
+                 <form novalidate>
+                              <fieldset>
+					<div class="modal-body">
+
+{% csrf_token %}
+                         {% for field in user.userform %}
+  <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-2 control-label" }}
+    <div class="col-sm-10">
+      {{ field.value }}
+    </div>
+  </div>
+{% endfor %}
+
+            <div class="row form-group table-bordered well">
+                <label class="col-sm-2 control-label">创建API</label>
+    <div class="col-sm-10">
+      {{ user.createapi|unordered_list }}
+    </div>
+  </div>
+
+
+            <div class="row form-group table-bordered well">
+                <label class="col-sm-2 control-label">创建用例</label>
+    <div class="col-sm-10">
+      {{ user.createcase|unordered_list }}
+    </div>
+  </div>
+
+
+            <div class="row form-group table-bordered well">
+                <label class="col-sm-2 control-label">创建API</label>
+    <div class="col-sm-10">
+      {{ user.createsuite|unordered_list }}
+    </div>
+  </div>
+
+
+
+			</div>
+					<div class="modal-footer">
+
+						<div>
+					  <button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></div>
+                    </div>
+<fieldset>
+					      </form>
+
+			  </div>
+			</div>
+        </div>
+
+
+
+
+
+
+</tr>
+ {% endfor%}
+
+</tbody>
+
+</thead>
+
+</table>
+
+
+   </div>
+
+
+</div>
+
+
+
+
+     {% endblock content %}

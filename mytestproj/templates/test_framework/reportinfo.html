@@ -1,0 +1,243 @@
+{% extends "test_framework/base.html" %}
+{% load extras %}
+
+
+ {% block breadcrumbs %}
+          <ul class="breadcrumb">
+                <li class="active"><a href="{% url 'api-root' %}">主页</a></li>
+
+                <li><a href="{% url 'testreport-list' %}">测试报告</a></li>
+          </ul>
+      {% endblock breadcrumbs %}
+
+       {% block content %}
+
+
+<div class="content-main" role="main" aria-label="main content">
+
+
+   <div class="container-fluid">
+
+       <div class="row" style="margin-top: 20px;margin-bottom: 20px;">
+    <form action="{% url 'testreport-list' %}" method="GET" enctype="multipart/form-data" novalidate>
+		    <div class="col-sm-3">
+
+	          <div class="form-group">
+		          {{ createform.testsuite.label_tag|add_class:"col-sm-6 text-primary" }}
+		          <div class="col-sm-6">
+		          {{ createform.testsuite|add_class:"form-control" }}
+	     </div>
+	          </div>
+            </div>
+        <div class="col-sm-3">
+
+	          <div class="form-group">
+		          {{ createform.testcase.label_tag|add_class:"col-sm-6 text-primary" }}
+		          <div class="col-sm-6">
+		          {{ createform.testcase|add_class:"form-control" }}
+	     </div>
+	          </div>
+            </div>
+		    <div class="col-sm-3">
+                	          <div class="form-group">
+		          {{ createform.result.label_tag|add_class:"col-sm-6 text-primary" }}
+		          <div class="col-sm-6">
+		          {{ createform.result|add_class:"form-control" }}
+	     </div>
+	          </div>
+
+		    </div>
+
+<div class="col-sm-3">
+
+			    <button type="submit" class="btn btn-default pull-left">查询</button>
+
+			  </div>
+   </form>
+	      </div>
+
+
+<table class="table table-hover">
+
+<thead>
+
+ <tr class="btn-primary" >
+ {% for key,value in reporttitle.items %}
+      {% if key not in 'error,msg,report_data' %}
+     <th>{{ value }}</th>
+     {% endif %}
+ {% endfor%}
+     <th>操作</th>
+				    </tr>
+
+<tbody>
+{% for report in reportlist %}
+
+<tr>
+    {% for key,value in report.items %}
+
+    {% if key not in 'report_data,reportform' %}
+    {% if key == "result" %}
+            <td> {% if value == True %}
+     完成
+        {% else %}
+        失败
+         {% endif %}</td>
+   {% else %}
+<td>{{ value }}</td>
+    {% endif %}
+
+    {% endif %}
+ {% endfor%}
+    <td class="btn-group-xs">
+        <button class="btn btn-danger" data-toggle="modal" data-target="#delete{{ report.id }}">删除</button>
+<button class="btn btn-primary" data-toggle="modal" data-target="#view{{ report.id }}">查看</button>
+        <a href="{{ report.report_data }}" target="_blank" class="btn-group-xs"><button class="btn btn-warning" type="button">查看测试报告</button></a>
+
+    </td>
+
+        						<div class="modal fade in" id="delete{{ report.id }}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="button-form" action="{% url 'testreport-detail' report.id %}" data-method="DELETE">
+                  <div class="modal-body">
+                      {% csrf_token %}
+                    <h4 class="text-center">确定删除吗？</h4>
+                  </div>
+                  <div class="modal-footer">
+                           <ul class="list-inline" style="text-align:center">
+<li><button type="submit" class="btn btn-primary center-block">提交</button></li>
+                    <li><button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></li>
+                            </ul>
+
+                  </div>
+                          </form>
+                </div>
+              </div>
+            </div>
+
+
+						<div class="modal fade in" id="view{{ report.id }}">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="text-center">测试报告详情</h4>
+				</div>
+                 <form novalidate>
+                              <fieldset>
+					<div class="modal-body">
+
+{% csrf_token %}
+                         {% for field in report.reportform %}
+                        {% if field.name not in "succees_count,fail_count,error_count,skip_count,report_data" %}
+                        {% if field.name == "testsuite" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+      {{ report.testsuite }}
+            </div>
+        </div>
+                        {% elif field.name == "testcase" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+      {{ report.testcase }}
+            </div>
+        </div>
+                        {% elif field.name == "result" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+        {% if field.value == True %}
+      完成
+        {% else %}
+        失败
+         {% endif %}
+            </div>
+        </div>
+                        {% elif field.name == "succees_case" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+<ul class="list-group">
+         {% for case in report.reportform.initial.succees_case %}
+        <li class="list-group-item"><a href="{% url 'testcase-list' %}?casename={{ case }}">{{ case }}</a></li>
+{% endfor %}
+            </ul>
+<!--        {{ report.reportform.initial.succees_case|unordered_list }}-->
+  </div>
+  </div>
+                        {% elif field.name == "fail_case" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+<ul class="list-group">
+         {% for case in report.reportform.initial.fail_case %}
+        <li class="list-group-item"><a href="{% url 'testcase-list' %}?casename={{ case }}">{{ case }}</a></li>
+{% endfor %}
+            </ul>
+<!--        {{ report.reportform.initial.succees_case|unordered_list }}-->
+  </div>
+  </div>
+                        {% elif field.name == "error_case" %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+<ul class="list-group">
+         {% for case in report.reportform.initial.error_case %}
+        <li class="list-group-item"><a href="{% url 'testcase-list' %}?casename={{ case }}">{{ case }}</a></li>
+{% endfor %}
+            </ul>
+<!--        {{ report.reportform.initial.succees_case|unordered_list }}-->
+  </div>
+  </div>
+                        {% else %}
+                        <div class="row form-group">
+    {{ field.label_tag|add_class:"col-sm-4 control-label" }}
+    <div class="col-sm-8">
+      {{ field.value }}
+            </div>
+        </div>
+                        {% endif %}
+                        {% endif %}
+{% endfor %}
+			</div>
+					<div class="modal-footer">
+
+						<div>
+					  <button type="button" class="btn btn-default center-block" data-dismiss="modal">关闭</button></div>
+                    </div>
+<fieldset>
+					      </form>
+
+			  </div>
+			</div>
+        </div>
+
+
+
+
+
+
+</tr>
+ {% endfor%}
+
+</tbody>
+
+</thead>
+
+</table>
+<div style="text-align: center">
+{% include "test_framework/pagination/numbers.html" %}
+</div>
+
+   </div>
+
+
+</div>
+
+
+
+
+     {% endblock content %}
