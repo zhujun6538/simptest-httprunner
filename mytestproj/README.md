@@ -8,7 +8,7 @@
 
 # 三、实现功能：
 功能模块
-![功能模块](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/bz1.png)  
+![功能模块](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/sp1.png)  
 
 测试步骤  
 可管理httprunner中的测试步骤中相关参数
