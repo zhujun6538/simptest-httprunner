@@ -10,30 +10,6 @@
 功能模块
 ![功能模块](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/sp1.png)  
 
-测试步骤  
-可管理httprunner中的测试步骤中相关参数
-![测试步骤](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/bz1.png)  
-![测试步骤](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/bz2.png) 
-
-测试用例管理
-可管理httprunner中的测试用例中相关参数，点击运行将参数组合成json字典并运行httprunner
-![测试用例管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/yl1.png) 
-![测试用例管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/yl2.png) 
-
-测试套件管理
-可管理httprunner中的测试套件中相关参数，点击运行将参数组合成json字典并运行httprunner
-![测试套件管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/tj1.png) 
-![测试套件管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/tj2.png) 
-
-测试报告管理
-对测试结果进行统计，并实时查看测试报告
-![测试报告管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/csbg1.png) 
-![测试报告管理](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/csbg2.png) 
-
-测试报告
-httprunner生成的测试报告，内容比较基本
-![测试报告](https://github.com/zhujun6538/simptest-httprunner/blob/master/mytestproj/data/img/csbg3.png) 
-
 
 
 
