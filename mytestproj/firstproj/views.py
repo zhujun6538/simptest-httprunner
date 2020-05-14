@@ -27,21 +27,6 @@ class RootView(APIRootView):
     def get(self, request, *args, **kwargs):
         return Response(status=200,template_name='test_framework/index.html')
 
-# Create your views here.
-# class ConfigInfoViewSet(viewsets.ModelViewSet):
-#     queryset = models.ConfigInfo.objects.all()
-#     serializer_class = serializers.ConfigSerializer
-#     renderer_classes = (renderers.TemplateHTMLRenderer,)
-#     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly,)
-#
-#     def list(self,request, *args, **kwargs):
-#         ConfigForm = modelform_factory(models.ConfigInfo,fields = ('__all__'))
-#         createform = ConfigForm()
-#         return Response({'createform':createform},status=200,template_name='test_framework/addconfig.html')
-
-    # 重写视图集create方法
-    # def create(self, request, *args, **kwargs):
-    #     super().create(request=request)
 
 class TeststepViewSet(viewsets.ModelViewSet):
     queryset = models.Teststep.objects.all()
@@ -71,31 +56,30 @@ class TeststepViewSet(viewsets.ModelViewSet):
         rdata['apititle'] = apititle
         rdata['createform'] = createform
         return Response(rdata,status=200,template_name='test_framework/teststep.html')
-        # return Response({'apilist':api_list,'apititle':apititle,'createform':createform},status=200,template_name='test_framework/Teststep.html')
 
     # 重写视图集create方法
     def create(self, request, *args, **kwargs):
-        request.data.url = reverse('Teststep-list')
+        request.data.url = reverse('teststep-list')
         super().create(request=request)
-        return redirect('Teststep-list')
+        return redirect('teststep-list')
 
     def perform_create(self, serializer):
         serializer.save(creater=self.request.user)
 
     # 重写视图集destroy方法
     def destroy(self, request, *args, **kwargs):
-        request.data.url = reverse('Teststep-list')
+        request.data.url = reverse('teststep-list')
         super().destroy(request=request)
         return Response(status=200)
 
     # 重写视图集retrieve方法
     def retrieve(self, request, *args, **kwargs):
-        return redirect('Teststep-list')
+        return redirect('teststep-list')
 
 
     # 重写视图集update方法
     def update(self, request, *args, **kwargs):
-        request.data.url = reverse('Teststep-list')
+        request.data.url = reverse('teststep-list')
         super().update(request=request)
         return Response(status=200)
 
@@ -132,21 +116,6 @@ class TestCaseViewSet(viewsets.ModelViewSet):
         rdata['casetitle'] = casetitle
         rdata['createform'] = createform
         return Response(rdata,status=200,template_name='test_framework/caseinfo.html')
-        # return Response({'caselist':case_list,'casetitle':casetitle,'createform':createform},status=200,template_name='test_framework/caseinfo.html')
-
-    # # 重写get_queryset方法
-    # def get_queryset(self):
-    #     """
-    #     Optionally restricts the returned purchases to a given user,
-    #     by filtering against a `username` query parameter in the URL.
-    #     """
-    #     # queryset = models.TestCase.objects.all()
-    #     queryset = self.queryset
-    #     suitename = self.request.query_params.get('case_suite', None)
-    #     if suitename is not None:
-    #         suite = models.TestSuite.objects.filter(suitename__contains = suitename)[0]
-    #         queryset = queryset.filter(case_suite = suite)
-    #     return queryset
 
     # 重写视图集create方法
     def create(self, request, *args, **kwargs):
@@ -155,7 +124,6 @@ class TestCaseViewSet(viewsets.ModelViewSet):
         return redirect('testcase-list')
 
     def perform_create(self, serializer):
-        # relateapi = models.Teststep.objects.get(pk=self.request.data['relateapi'])
         serializer.save(creater=self.request.user)
 
     # 重写视图集destroy方法
@@ -218,7 +186,6 @@ class TestSuiteViewSet(viewsets.ModelViewSet):
         rdata['suitetitle'] = suitetitle
         rdata['createform'] = createform
         return Response(rdata,status=200,template_name='test_framework/suiteinfo.html')
-        # return Response({'suitelist':suite_list,'suitetitle':suitetitle,'createform':createform},status=200,template_name='test_framework/suiteinfo.html')
 
     # 重写视图集create方法
     def create(self, request, *args, **kwargs):
@@ -287,7 +254,6 @@ class TestReportViewSet(viewsets.ModelViewSet):
         rdata['reporttitle'] = reporttitle
         rdata['createform'] = createform
         return Response(rdata,status=200,template_name='test_framework/reportinfo.html')
-        # return Response({'reportlist':report_list,'reporttitle':reporttitle,'createform':createform},status=200,template_name='test_framework/reportinfo.html')
 
     # 重写视图集destroy方法
     def destroy(self, request, *args, **kwargs):
@@ -329,4 +295,3 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         rdata['usertitle'] = usertitle
         rdata['createform'] = createform
         return Response(rdata,status=200,template_name='test_framework/userinfo.html')
-        # return Response({'userlist':user_list,'usertitle':usertitle,'createform':createform},status=200,template_name='test_framework/userinfo.html')

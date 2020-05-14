@@ -8,7 +8,6 @@ def get_media_root():
 
 routers = DefaultRouter()
 routers.APIRootView = views.RootView
-# routers.register(r'addconf',views.ConfigInfoViewSet)
 routers.register(r'teststep',views.TeststepViewSet)
 routers.register(r'testcase',views.TestCaseViewSet)
 routers.register(r'testsuite',views.TestSuiteViewSet)
