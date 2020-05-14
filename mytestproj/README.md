@@ -1,4 +1,4 @@
-# simptest框架httprunner版
+# simptest框架
 
 # 一、项目简介：
 通过django rest framework基于httprunner测试框架进行接口测试，简单的实现mvc模式的测试框架，由于是个人研究和开发，功能不完善，有待后期解决。
