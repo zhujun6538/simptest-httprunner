@@ -6,7 +6,7 @@ colorama==0.4.3
 demjson==2.2.4
 Django==3.0.4
 django-filter==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 filetype==1.0.6
 httprunner==3.0.1.2
 idna==2.9
