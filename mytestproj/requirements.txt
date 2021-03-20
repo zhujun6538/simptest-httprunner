@@ -10,7 +10,7 @@ djangorestframework==3.11.0
 filetype==1.0.6
 httprunner==3.0.1.2
 idna==2.9
-Jinja2==2.11.2
+Jinja2==2.11.3
 jsonpath==0.82
 loguru==0.4.1
 MarkupSafe==1.1.1
